@@ -7,7 +7,6 @@ fi
 
 # If ZINIT_WAIT is set (to empty string), this script will run blocking
 WAIT=${ZINIT_WAIT-wait}
-export PATH="$HOME/.pyenv/bin:$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
 # Hide prompt
 DEFAULT_USER=`whoami`
