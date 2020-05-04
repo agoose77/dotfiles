@@ -338,7 +338,7 @@ def update_path(*components: str):
     ZSHRC_PATH.write_text(re.sub('export PATH="?([^"\n]*)"?', replacer, contents))
 
 
-# @modifies_environment
+@modifies_environment
 def append_to_zshrc(*scripts: str):
     ZSHRC_PATH.touch()
     zshrc_contents = ZSHRC_PATH.read_text()
@@ -348,13 +348,12 @@ def append_to_zshrc(*scripts: str):
     ZSHRC_PATH.write_text(zshrc_contents)
 
 
-# @modifies_environment
+@modifies_environment
 def prepend_to_zshrc(*scripts: str):
     zshrc_contents = "\n".join(scripts)
     if not zshrc_contents.endswith("\n"):
         zshrc_contents += "\n"
     ZSHRC_PATH.write_text(zshrc_contents + ZSHRC_PATH.read_text())
-    reload_plumbum_env()
 
 
 @installs('zsh')
