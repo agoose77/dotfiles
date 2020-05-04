@@ -17,8 +17,8 @@ from typing import NamedTuple, List, Dict, Any, Union
 
 
 #  Bootstrap ###########################################################################################################
-check_output(["sudo", "apt", "install", "-y", "python3-pip"], shell=False)
-check_output([sys.executable, "-m", "pip", "install", "plumbum"])
+check_output(["sudo", "apt", "install", "-y", "python3-pip", "stow"], shell=False)
+check_output([sys.executable, "-m", "pip", "install", "plumbum"], shell=False)
 
 import site
 sys.path.append(site.getusersitepackages())
@@ -1023,10 +1023,9 @@ if __name__ == "__main__":
     install_parser.set_defaults(install_all=True)
 
     args = parser.parse_args()
-    
     config = create_user_config()
-    if args.batch:
-        config.resolve()
 
     if hasattr(args, "install_all"):
+        if args.batch:
+            config.resolve()
         install_all(config)

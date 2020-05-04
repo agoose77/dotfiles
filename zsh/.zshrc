@@ -110,4 +110,8 @@ alias jl="jupyter lab"
 alias jle="jupyter labextension"
 alias jla="jupyter lab --browser='google-chrome --app=%s'"
 
+# Wallpapers
+. $HOME/.wallpapers/wallpaper.sh
+
 (( ! ${+functions[p10k]} )) || p10k finalize
+
