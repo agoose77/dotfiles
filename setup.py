@@ -867,16 +867,26 @@ class Config:
     Defers evaluation of 'Deferred' configuration getters until they are looked up.
     """
 
-    def __getattribute__(self, item):
-        value = object.__getattribute__(self, item)
+    def _resolve_attribute(self, name, value):
         if isinstance(value, DeferredValueFactory):
             value = value()
-            setattr(self, item, value)
+            setattr(self, name, value)
         return value
+        
+    def __getattribute__(self, item):
+        if item.startswith("_"):
+            return super().__getattribute__(item)
+            
+        value = object.__getattribute__(self, item)
+        return self._resolve_attribute(item, value)
 
     def set(self, func):
         assert callable(func)
         setattr(self, func.__name__, deferred(func))
+
+    def resolve(self):
+        for name, value in vars(self).items():
+            self._resolve_attribute(name, value)
 
 
 class DeferredValueFactory:
@@ -1010,10 +1020,14 @@ if __name__ == "__main__":
     subparsers = parser.add_subparsers()
 
     install_parser = subparsers.add_parser("install")
+    install_parser.add_argument('-b', '--batch', action='store_true', help="load configuration options up front rather than during installation")
     install_parser.set_defaults(install_all=True)
 
     args = parser.parse_args()
+    
     config = create_user_config()
+    if args.batch:
+        config.resolve()
 
     if hasattr(args, "install_all"):
         install_all(config)
