@@ -1,10 +1,17 @@
 # dotfiles
 This repo contains my dotfiles (tada)!
 
-To install the dotfiles, 
+To install the dotfiles, clone this repo and cd
 ```bash
 git clone git@github.com:agoose77/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
+```
+Then simply run the stow command
+```bash
+./setup.py stow
+```
+or alternatively, run the equivalent bash command
+```python
 find * -type d -maxdepth 0  -exec stow {} \;
 ```
 

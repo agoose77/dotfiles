@@ -43,6 +43,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 HOME_PATH = Path.home()
+THIS_DIR = Path(__file__).parent
 ZSHRC_PATH = HOME_PATH / ".zshrc"
 ZPROFILE_PATH = HOME_PATH / ".zprofile"
 ZSHENV_PATH = HOME_PATH / ".zshenv"
@@ -998,21 +999,37 @@ def install_all(config: Config):
     install_tex()
 
 
+def stow_dotfiles():
+    with local.cwd(THIS_DIR):
+        for path in THIS_DIR.iterdir():
+            if not path.is_dir():
+                continue
+
+            if path.name.startswith("."):
+                continue
+
+            cmd.stow(path.name)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
 
+    stow_parser = subparsers.add_parser("stow")
+    stow_parser.set_defaults(stow=True)
+
     install_parser = subparsers.add_parser("install")
     install_parser.add_argument('-b', '--batch', action='store_true', help="load configuration options up front rather than during installation")
-    install_parser.set_defaults(install_all=True)
+    install_parser.set_defaults(install=True)
 
     args = parser.parse_args()
     config = create_user_config()
 
-    if hasattr(args, "install_all"):
+    if hasattr(args, "install"):
         if args.batch:
             config.resolve()
         install_all(config)
-
+    elif hasattr(args, "stow"):
+        stow_dotfiles()
     else:
         code.interact(local=locals())
