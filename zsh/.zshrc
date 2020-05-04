@@ -84,10 +84,6 @@ alias tkss='tmux kill-session -t'
 zinit ice ${WAIT} lucid atload'eval "$(pyenv virtualenv-init - zsh)"'
 zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
 
-# Editors
-export EDITOR=micro
-export MICRO_TRUECOLOR=1
-
 # History
 HISTFILE=~/.histfile
 HISTSIZE=1000
