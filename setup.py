@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import code
 import json
 import logging
 import inspect
@@ -319,26 +320,6 @@ def find_latest_github_tag(token: str, owner: str, name: str) -> GitTag:
 
 
 @modifies_environment
-def update_path(*components: str):
-    """Update the PATH variable in .zshrc
-
-    :param components:
-    :return:
-    """
-    contents = ZSHRC_PATH.read_text()
-
-    def replacer(match_obj):
-        path_str = match_obj.group(1)
-        path = path_str.split(":")
-        for component in components:
-            if not component in path:
-                path.insert(0, component)
-        return f'export PATH="{":".join(path)}"'
-
-    ZSHRC_PATH.write_text(re.sub('export PATH="?([^"\n]*)"?', replacer, contents))
-
-
-@modifies_environment
 def append_to_zshrc(*scripts: str):
     ZSHRC_PATH.touch()
     zshrc_contents = ZSHRC_PATH.read_text()
@@ -437,8 +418,11 @@ def install_tex():
                     if match:
                         path_component = match.group(1)
 
+    texlive_env_path = next((HOME_PATH / ".zshenv.d").glob("*-texlive"))
     if path_component is not None:
-        update_path(path_component)
+        texlive_env_path.write_text(texlive_env_path.read_text() + """
+export PATH="/usr/local/texlive/2020/bin/x86_64-linux:$PATH"
+        """)
 
 
 def get_system_python_version() -> str:
@@ -1029,3 +1013,6 @@ if __name__ == "__main__":
         if args.batch:
             config.resolve()
         install_all(config)
+
+    else:
+        code.interact(local=locals())
