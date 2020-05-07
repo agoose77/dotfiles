@@ -108,5 +108,8 @@ alias jla="jupyter lab --browser='google-chrome --app=%s'"
 # Wallpapers
 . $HOME/.wallpapers/wallpaper.sh
 
+# Change colors for ssh
+alias ssh='TERM=xterm-256color ssh'
+
 (( ! ${+functions[p10k]} )) || p10k finalize
 
