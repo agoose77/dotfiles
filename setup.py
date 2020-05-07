@@ -770,9 +770,9 @@ def install_regolith():
     add_apt_repository("ppa:regolith-linux/release")
     install_with_apt("regolith-desktop", "regolith-look-ayu-mirage")
 
-    # Set theme
-    cmd.regolith_look("set", "ayu-mirage")
-    cmd.regolith_look("refresh")
+    # Don't theme, handled by dotfiles
+    # cmd.regolith_look("set", "ayu-mirage")
+    # cmd.regolith_look("refresh")
 
 
 @installs('alacritty')
