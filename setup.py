@@ -769,6 +769,7 @@ def add_apt_repository(repo):
 def install_regolith():
     add_apt_repository("ppa:regolith-linux/release")
     install_with_apt("regolith-desktop", "regolith-look-ayu-mirage")
+    install_with_pip('i3ipc')
 
     # Don't theme, handled by dotfiles
     # cmd.regolith_look("set", "ayu-mirage")
