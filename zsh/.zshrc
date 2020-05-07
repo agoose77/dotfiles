@@ -111,5 +111,8 @@ alias jla="jupyter lab --browser='google-chrome --app=%s'"
 # Change colors for ssh
 alias ssh='TERM=xterm-256color ssh'
 
+# Move to trash
+alias tt='gio trash'
+
 (( ! ${+functions[p10k]} )) || p10k finalize
 
