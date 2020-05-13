@@ -1,2 +1,0 @@
-
-cd /opt/geant4/bin; source geant4.sh;  cd - >/dev/null
