@@ -695,6 +695,19 @@ def install_alacritty():
     ]()
 
 
+@installs('singularity')
+def install_singularity(singularity_version='3.5.3'):
+    install_with_apt('golang-go')
+    
+    with local.cwd(make_or_find_libraries_dir()):
+        cmd.wget(f'https://github.com/sylabs/singularity/releases/download/v{singularity_version}/singularity-{singularity_version}.tar.gz')
+        cmd.tar('-xzf', f'singularity-{singularity_version}.tar.gz')
+
+        with local.cwd('singularity'):
+            local['./mconfig']('--prefix=/opt/singularity')
+            cmd.make('-C', './builddir')
+            cmd.sudo[cmd.make['-C', './builddir', 'install']]()
+
 NO_DEFAULT = object()
 
 
@@ -883,6 +896,8 @@ def install_all(config: Config):
     install_with_snap("gimp")
     install_with_apt("ripgrep")
     install_gnome_tweak_tool()
+
+    install_singularity()
 
     for package in ("pycharm-professional", "clion", "webstorm"):
         install_with_snap(package, classic=True)
