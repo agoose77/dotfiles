@@ -771,6 +771,10 @@ def install_regolith():
     install_with_apt("regolith-desktop", "regolith-look-ayu-mirage")
     install_with_pip('i3ipc')
 
+    # Copy blocks to local install
+    for block_path in local.path("/etc/regolith/i3xrocks/conf.d").iterdir():
+       cmd.cp(block_path, local.path("~/.config/regolith/i3xrocks/conf.d"))
+
     # Don't theme, handled by dotfiles
     # cmd.regolith_look("set", "ayu-mirage")
     # cmd.regolith_look("refresh")
@@ -1009,7 +1013,7 @@ def stow_dotfiles():
             if path.name.startswith("."):
                 continue
 
-            cmd.stow(path.name)
+            cmd.stow(path.name, "--no-folding")
 
 
 if __name__ == "__main__":
