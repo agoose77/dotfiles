@@ -161,7 +161,7 @@ def reload_plumbum_env() -> Dict[str, Any]:
     """Reloads `local.env` after re-sourcing .zshrc"""
     fd, temp_path = tempfile.mkstemp()
 
-    with local.env(ZINIT_WAIT=" "):
+    with local.env(ZINIT_WAIT=""):
         (
             cmd.zsh["-is"]
             << f"{sys.executable} -c {shlex.quote(EXPORT_OS_ENVIRON_SOURCE)} {temp_path}"
@@ -461,6 +461,7 @@ def install_pyenv_sys_python(system_venv_name: str):
         cmd.nbdime("config-git", "--enable", "--global")
 
 
+@modifies_environment
 @installs('pyenv')
 def install_pyenv():
     """
