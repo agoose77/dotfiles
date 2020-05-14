@@ -578,6 +578,8 @@ def install_git(name, email_address):
     cmd.git("config", "--global", "user.email", email_address)
     cmd.git("config", "--global", "user.name", name)
 
+    cmd.git("lfs", "install")
+
     make_or_find_git_dir()
 
 
