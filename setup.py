@@ -163,7 +163,7 @@ def reload_plumbum_env() -> Dict[str, Any]:
 
     with local.env(ZINIT_WAIT=""):
         (
-            cmd.zsh["-is"]
+            cmd.zsh["-s"]
             << f"{sys.executable} -c {shlex.quote(EXPORT_OS_ENVIRON_SOURCE)} {temp_path}"
         )()
 
