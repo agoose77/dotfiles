@@ -1,5 +1,3 @@
 # Texlive
-# let setup.py populate this  
-
-export PATH="/usr/local/texlive/2020/bin/x86_64-linux:$PATH"
-        
+TEXLIVE_PATH=( /usr/local/texlive/*/bin/x86_64-linux )
+export PATH="$TEXLIVE_PATH:$PATH"

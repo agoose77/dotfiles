@@ -407,25 +407,8 @@ def install_tex():
 
         directory = next((p for p in (local.cwd // "install-tl*") if p.is_dir()))
 
-        path_component = None
-        pattern = re.compile(r"Most importantly, add (.*)")
-
         with local.cwd(directory):
-            proc = (cmd.sudo[local[local.cwd / "install-tl"]] << "I\n").popen()
-            for out, err in proc:
-                if err:
-                    log(err, logging.ERROR)
-                if out:
-                    log(out, logging.INFO)
-                    match = pattern.match(out)
-                    if match:
-                        path_component = match.group(1)
-
-    texlive_env_path = next((HOME_PATH / ".zshenv.d").glob("*-texlive"))
-    if path_component is not None:
-        texlive_env_path.write_text(texlive_env_path.read_text() + """
-export PATH="/usr/local/texlive/2020/bin/x86_64-linux:$PATH"
-        """)
+            proc = (cmd.sudo[local[local.cwd / "install-tl"]] << "I\n") & plumbum.FG
 
 
 def get_system_python_version() -> str:
