@@ -3,7 +3,7 @@ This repo contains my dotfiles (tada)! A new system installation is performed in
 
 ## TLDR
 ```bash
-git clone --recurse-submodules git@github.com:agoose77/dotfiles.git ~/.dotfiles
+git clone --recurse-submodules https://github.com/agoose77/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./setup.py stow
 ```
@@ -40,3 +40,9 @@ Optionally provide the "batch" argument to load configuration options up front, 
 ```bash
 git lfs pull
 ```
+
+## GPG
+1. Load subkeys into GPG
+2. Extract keygrip for signing key with `gpg -K --with-keygrip`
+3. Add keygrip to `~/.gnupg/sshcontrol`
+4. Copy SSH key for GitHub from `ssh-add -L`
