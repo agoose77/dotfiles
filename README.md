@@ -1,7 +1,7 @@
 # dotfiles
 This repo contains my dotfiles (tada)! A new system installation is performed in three steps:
 
-##TLDR
+## TLDR
 
 ## Steps
 ```bash
