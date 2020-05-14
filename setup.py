@@ -568,7 +568,7 @@ def create_gpg_key(name, email_address, key_length):
     return gpg.export_keys(signing_key), signing_key
 
 
-@installs('git')
+@installs()
 def install_git(name, email_address):
     install_with_apt("git", "git-lfs")
 
