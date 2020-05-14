@@ -2,13 +2,13 @@
 This repo contains my dotfiles (tada)! A new system installation is performed in three steps:
 
 ## TLDR
-
-## Steps
 ```bash
 git clone --recurse-submodules git@github.com:agoose77/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./setup.py stow
 ```
+
+## Steps
 
 ### Clone  
 To install the dotfiles, clone this repo and cd
