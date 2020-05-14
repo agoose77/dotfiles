@@ -699,6 +699,7 @@ def install_alacritty():
 @installs('singularity')
 def install_singularity(singularity_version='3.5.3'):
     install_with_apt('golang-go')
+    install_with_apt('build-essential', 'libssl-dev', 'uuid-dev', 'libgpgme11-dev', 'squashfs-tools', 'libseccomp-dev', 'pkg-config')
     
     with local.cwd(make_or_find_libraries_dir()):
         cmd.wget(f'https://github.com/sylabs/singularity/releases/download/v{singularity_version}/singularity-{singularity_version}.tar.gz')
