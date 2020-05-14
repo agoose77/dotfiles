@@ -652,7 +652,20 @@ def add_apt_repository(repo):
 @installs('regolith-look')
 def install_regolith():
     add_apt_repository("ppa:regolith-linux/release")
-    install_with_apt("regolith-desktop", "regolith-look-ayu-mirage")
+    install_with_apt(
+        "regolith-desktop", 
+        "regolith-look-ayu-mirage",
+        "i3xrocks-battery",
+        "i3xrocks-cpu-usage",
+        "i3xrocks-media-player",
+        "i3xrocks-memory",
+        "i3xrocks-net-traffic",
+        "i3xrocks-temp",
+        "i3xrocks-time",
+        "i3xrocks-volume",
+        "i3xrocks-weather",
+        "i3xrocks-wifi"
+    )
     install_with_pip('i3ipc')
 
     # Copy blocks to local install
