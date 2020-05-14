@@ -390,10 +390,12 @@ def install_pandoc(github_token: str):
         for n in release["releaseAssets"]["nodes"]
         if n["name"].endswith(".deb")
     )
+    deb_url = node['downloadUrl']
+    
     log(f"Found {release['name']}, downloading deb from {deb_url}")
 
     with local.cwd("/tmp"):
-        cmd.aria2c(node['downloadUrl'], "-j", "10", "-x", "10")
+        cmd.aria2c(deb_url, "-j", "10", "-x", "10")
         install_with_apt(local.path(node['name']))
 
 
