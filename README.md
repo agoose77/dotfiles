@@ -1,23 +1,33 @@
 # dotfiles
-This repo contains my dotfiles (tada)! A new system installation is performed in three steps:
+This repo contains my dotfiles (tada)! A new system installation is performed in four steps:
 
 ## TLDR
 ```bash
-git clone --recurse-submodules https://github.com/agoose77/dotfiles.git ~/.dotfiles
+# Bootstrap
+sudo apt install gnupg git git-lfs
+git clone --recurse-submodules git@github.com:agoose77/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./setup.py stow
 ```
 
 ## Steps
 
+### GPG
+1. Install gnupg with `sudo apt install gnupg`
+1. Load subkeys into GPG
+1. Extract keygrip for signing key with `gpg -K --with-keygrip`
+1. Add keygrip to `~/.gnupg/sshcontrol`
+1. Copy SSH key for GitHub from `ssh-add -L`
+
+
 ### Clone  
 To install the dotfiles, clone this repo and cd
 ```bash
+sudo apt install git git-lfs && git lfs install
 git clone --recurse-submodules git@github.com:agoose77/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./setup.py stow
 ./setup.py install -b
-git lfs pull
 ```
 Then simply run the stow command
 ```bash
@@ -40,9 +50,3 @@ Optionally provide the "batch" argument to load configuration options up front, 
 ```bash
 git lfs pull
 ```
-
-## GPG
-1. Load subkeys into GPG
-2. Extract keygrip for signing key with `gpg -K --with-keygrip`
-3. Add keygrip to `~/.gnupg/sshcontrol`
-4. Copy SSH key for GitHub from `ssh-add -L`

@@ -555,9 +555,7 @@ def create_gpg_key(name, email_address, key_length):
 
 
 @installs()
-def install_git(name, email_address):
-    install_with_apt("git", "git-lfs")
-
+def install_git_config(name, email_address):
     cmd.git("config", "--global", "user.email", email_address)
     cmd.git("config", "--global", "user.name", name)
 
@@ -857,7 +855,7 @@ def install_all(config: Config):
         "xclip",
         "libbz2-dev",
     )
-    install_git(config.GIT_USER_NAME, config.GIT_EMAIL_ADDRESS)
+    install_git_config(config.GIT_USER_NAME, config.GIT_EMAIL_ADDRESS)
     install_zsh()
 
     install_regolith()
