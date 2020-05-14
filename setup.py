@@ -875,7 +875,6 @@ def install_all(config: Config):
     install_alacritty()
 
     install_chrome()
-    install_gnupg(config.GIT_USER_NAME, config.GIT_EMAIL_ADDRESS, config.GIT_KEY_LENGTH)
     install_with_apt("fd-find")
     install_tmux()
 
