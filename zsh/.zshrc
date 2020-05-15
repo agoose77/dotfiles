@@ -83,6 +83,14 @@ alias tkss='tmux kill-session -t'
 zinit ice ${WAIT} lucid atload'eval "$(pyenv virtualenv-init - zsh)"'
 zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
 
+# direnv
+## Silence direnv
+export DIRENV_LOG_FORMAT=
+zinit ice ${WAIT} lucid from"gh-r" as"program" mv"direnv* -> direnv" \
+    atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
+    pick"direnv" src="zhook.zsh"
+zinit light direnv/direnv
+
 # History
 HISTFILE=~/.histfile
 HISTSIZE=1000
