@@ -35,7 +35,7 @@ Then simply run the stow command
 ```
 or alternatively, run the equivalent bash command
 ```python
-find * -type d -maxdepth 0  -exec stow {} \;
+find * -type d -maxdepth 0  -exec stow --no-folding {} \;
 ```
 ### Install  
 The setup script should be idempotent for the same configuration:
