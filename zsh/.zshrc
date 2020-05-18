@@ -50,11 +50,6 @@ export ZSH_AUTOSUGGEST_USE_ASYNC=1 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 zinit ice ${WAIT} lucid atload"_zsh_autosuggest_start"
 zinit load zsh-users/zsh-autosuggestions
 
-# Load web-search plugin
-zinit ice ${WAIT} lucid
-zinit snippet OMZ::plugins/web-search/web-search.plugin.zsh
-alias web='web_search google'
-
 # Disable config wizard
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 zinit ice depth=1 lucid atload'[[ ! -f ~/.p10k.zsh ]] && true || source ~/.p10k.zsh; _p9k_precmd' nocd
@@ -80,8 +75,10 @@ alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
 
 # pyenv
-zinit ice ${WAIT} lucid atload'eval "$(pyenv virtualenv-init - zsh)"'
-zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
+if [[ -d "$HOME/.pyenv" ]]; then
+	zinit ice ${WAIT} lucid atload'eval "$(pyenv virtualenv-init - zsh)"'
+	zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
+fi
 
 # direnv
 ## Silence direnv
