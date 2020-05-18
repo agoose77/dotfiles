@@ -82,6 +82,10 @@ zinit ice ${WAIT} lucid from"gh-r" as"program" mv"direnv* -> direnv" \
     pick"direnv" src="zhook.zsh"
 zinit light direnv/direnv
 
+# Micro editor
+zinit ice from"gh-r" as"program" bpick"*linux*" extract"" mv"micro*/micro -> micro"
+zinit load zyedidia/micro
+
 # History
 HISTFILE=~/.histfile
 HISTSIZE=10000
