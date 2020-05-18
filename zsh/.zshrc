@@ -74,12 +74,6 @@ alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
 
-# pyenv
-if [[ -d "$HOME/.pyenv" ]]; then
-	zinit ice ${WAIT} lucid atload'eval "$(pyenv virtualenv-init - zsh)"'
-	zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
-fi
-
 # direnv
 ## Silence direnv
 export DIRENV_LOG_FORMAT=
@@ -116,9 +110,6 @@ alias jc="jupyter console"
 alias jl="jupyter lab"
 alias jle="jupyter labextension"
 alias jla="jupyter lab --browser='google-chrome --app=%s'"
-
-# Wallpapers
-. $HOME/.wallpapers/wallpaper.sh
 
 # Change colors for ssh
 alias ssh='TERM=xterm-256color ssh'
