@@ -83,7 +83,7 @@ zinit ice ${WAIT} lucid from"gh-r" as"program" mv"direnv* -> direnv" \
 zinit light direnv/direnv
 
 # Micro editor
-zinit ice from"gh-r" as"program" bpick"*linux*" extract"" mv"micro*/micro -> micro"
+zinit ice from"gh-r" as"program" bpick"*linux64*" extract"" mv"micro*/micro -> micro"
 zinit load zyedidia/micro
 
 # History
