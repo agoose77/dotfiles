@@ -99,7 +99,10 @@ setopt SHARE_HISTORY
 
 # GPG signing
 export GPG_TTY=$(tty)
-gpg-connect-agent /bye
+# Restart the agent, or start it if not running
+if ! gpg-connect-agent /bye 2>/dev/null; then
+	source <(gpg-agent --daemon)
+fi
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
 # Automatically cd into directories entered as commands
