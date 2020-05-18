@@ -1,33 +1,32 @@
 #!/usr/bin/python3
 import argparse
 import code
+import inspect
 import json
 import logging
-import inspect
 import os
-import re
-import sys
 import shlex
+import sys
 import tempfile
-import pexpect
 from contextlib import contextmanager
 from functools import wraps
 from pathlib import Path
 from subprocess import check_output
-from typing import NamedTuple, List, Dict, Any, Union
-
+from typing import NamedTuple, List, Dict, Any
 
 #  Bootstrap ###########################################################################################################
 check_output(["sudo", "apt", "install", "-y", "python3-pip", "stow"], shell=False)
 check_output([sys.executable, "-m", "pip", "install", "plumbum"], shell=False)
 
 import site
+
 sys.path.append(site.getusersitepackages())
 
 # Import modules
 import plumbum
 from plumbum import cmd, local
 import plumbum.colors
+
 ########################################################################################################################
 
 
@@ -107,6 +106,7 @@ def log(message, level=logging.INFO):
 
 def is_installed(executable_or_test, bound_arguments):
     from plumbum.commands import BaseCommand
+
     if isinstance(executable_or_test, str):
         return executable_or_test in local
 
@@ -130,7 +130,9 @@ def installs(executable_or_test: Any = None):
 
             log(f"Running {func.__qualname__} with {bound_arguments}")
 
-            if executable_or_test and is_installed(executable_or_test, bound_arguments.arguments):
+            if executable_or_test and is_installed(
+                executable_or_test, bound_arguments.arguments
+            ):
                 log(f"{func.__qualname__} is already installed!")
                 return
 
@@ -138,7 +140,10 @@ def installs(executable_or_test: Any = None):
                 try:
                     func(*args, **kwargs)
                 except Exception:
-                    log(f"Execution of {func.__qualname__} with {bound_arguments} failed", level=logging.ERROR)
+                    log(
+                        f"Execution of {func.__qualname__} with {bound_arguments} failed",
+                        level=logging.ERROR,
+                    )
                     raise
 
             log(f"Finished running {func.__qualname__} with {bound_arguments}")
@@ -181,6 +186,7 @@ def modifies_environment(f):
         return result
 
     return wrapper
+
 
 #  Installers ##########################################################################################################
 @installs()
@@ -338,18 +344,18 @@ def prepend_to_zshrc(*scripts: str):
     ZSHRC_PATH.write_text(zshrc_contents + ZSHRC_PATH.read_text())
 
 
-@installs('zsh')
+@installs("zsh")
 def install_zsh():
     install_with_apt("zsh")
     cmd.sudo[cmd.chsh["-s", local.which("zsh"), os.environ["USER"]]]()
 
 
-@installs('tmux')
+@installs("tmux")
 def install_tmux():
     install_with_apt("tmux")
 
 
-@installs('google-chrome')
+@installs("google-chrome")
 def install_chrome():
     deb_name = "google-chrome-stable_current_amd64.deb"
     with local.cwd("/tmp"):
@@ -357,12 +363,12 @@ def install_chrome():
         cmd.sudo[cmd.dpkg["-i", deb_name]]()
 
 
-@installs('gnome-tweaks')
+@installs("gnome-tweaks")
 def install_gnome_tweak_tool():
     (cmd.sudo[cmd.apt["install", "gnome-tweak-tool"]] << "\n")()
 
 
-@installs('pandoc')
+@installs("pandoc")
 def install_pandoc(github_token: str):
     query = """
 {
@@ -386,20 +392,18 @@ def install_pandoc(github_token: str):
     (release,) = result["data"]["repository"]["releases"]["nodes"]
 
     node = next(
-        n
-        for n in release["releaseAssets"]["nodes"]
-        if n["name"].endswith(".deb")
+        n for n in release["releaseAssets"]["nodes"] if n["name"].endswith(".deb")
     )
-    deb_url = node['downloadUrl']
-    
+    deb_url = node["downloadUrl"]
+
     log(f"Found {release['name']}, downloading deb from {deb_url}")
 
     with local.cwd("/tmp"):
         cmd.aria2c(deb_url, "-j", "10", "-x", "10")
-        install_with_apt(local.path(node['name']))
+        install_with_apt(local.path(node["name"]))
 
 
-@installs('latex')
+@installs("latex")
 def install_tex():
     with local.cwd("/tmp"):
         cmd.wget("mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz")
@@ -417,7 +421,7 @@ def get_system_python_version() -> str:
     return f"{version_info.major}.{version_info.minor}.{version_info.micro}"
 
 
-@installs(lambda _: cmd.pyenv('global').strip() == _['system_venv_name'])
+@installs(lambda _: cmd.pyenv("global").strip() == _["system_venv_name"])
 def install_pyenv_sys_python(system_venv_name: str):
     """
     Install the system Python into pyenv's versions directory using venv
@@ -447,7 +451,7 @@ def install_pyenv_sys_python(system_venv_name: str):
 
 
 @modifies_environment
-@installs('pyenv')
+@installs("pyenv")
 def install_pyenv():
     """
     Install PyEnv for managing Python versions & virtualenvs
@@ -463,8 +467,9 @@ def install_pyenv():
         | cmd.bash
     )()
 
+
 @installs(
-    lambda _: (cmd.pyenv['versions'] | cmd.grep[_['virtualenv_name']]) & plumbum.TF
+    lambda _: (cmd.pyenv["versions"] | cmd.grep[_["virtualenv_name"]]) & plumbum.TF
 )
 def install_development_virtualenv(python_version: str, virtualenv_name: str = None):
     """
@@ -475,7 +480,7 @@ def install_development_virtualenv(python_version: str, virtualenv_name: str = N
     :return:
     """
     # Install npm
-    install_with_apt("npm") # Is this already installed?
+    install_with_apt("npm")  # Is this already installed?
 
     if not python_version:
         python_version = get_system_python_version()
@@ -527,7 +532,7 @@ def install_development_virtualenv(python_version: str, virtualenv_name: str = N
         )
 
 
-@installs('micro')
+@installs("micro")
 def install_micro():
     """
     Install the micro editor
@@ -564,7 +569,7 @@ def install_git_config(name, email_address):
     make_or_find_git_dir()
 
 
-@installs('gpg')
+@installs("gpg")
 def install_gnupg(name, email_address, key_length):
     install_with_apt("gnupg")
     install_with_pip("gnupg")
@@ -649,11 +654,11 @@ def add_apt_repository(repo):
     cmd.sudo[cmd.add_apt_repository[repo]]()
 
 
-@installs('regolith-look')
+@installs("regolith-look")
 def install_regolith():
     add_apt_repository("ppa:regolith-linux/release")
     install_with_apt(
-        "regolith-desktop", 
+        "regolith-desktop",
         "regolith-look-ayu-mirage",
         "i3xrocks-battery",
         "i3xrocks-cpu-usage",
@@ -664,20 +669,20 @@ def install_regolith():
         "i3xrocks-time",
         "i3xrocks-volume",
         "i3xrocks-weather",
-        "i3xrocks-wifi"
+        "i3xrocks-wifi",
     )
-    install_with_pip('i3ipc')
+    install_with_pip("i3ipc")
 
     # Copy blocks to local install
     for block_path in local.path("/etc/regolith/i3xrocks/conf.d").iterdir():
-       cmd.cp(block_path, local.path("~/.config/regolith/i3xrocks/conf.d"))
+        cmd.cp(block_path, local.path("~/.config/regolith/i3xrocks/conf.d"))
 
     # Don't theme, handled by dotfiles
     # cmd.regolith_look("set", "ayu-mirage")
     # cmd.regolith_look("refresh")
 
 
-@installs('alacritty')
+@installs("alacritty")
 def install_alacritty():
     add_apt_repository("ppa:mmstick76/alacritty")
     install_with_apt("alacritty")
@@ -694,19 +699,30 @@ def install_alacritty():
     ]()
 
 
-@installs('singularity')
-def install_singularity(singularity_version='3.5.3'):
-    install_with_apt('golang-go')
-    install_with_apt('build-essential', 'libssl-dev', 'uuid-dev', 'libgpgme11-dev', 'squashfs-tools', 'libseccomp-dev', 'pkg-config')
-    
-    with local.cwd(make_or_find_libraries_dir()):
-        cmd.wget(f'https://github.com/sylabs/singularity/releases/download/v{singularity_version}/singularity-{singularity_version}.tar.gz')
-        cmd.tar('-xzf', f'singularity-{singularity_version}.tar.gz')
+@installs("singularity")
+def install_singularity(singularity_version="3.5.3"):
+    install_with_apt("golang-go")
+    install_with_apt(
+        "build-essential",
+        "libssl-dev",
+        "uuid-dev",
+        "libgpgme11-dev",
+        "squashfs-tools",
+        "libseccomp-dev",
+        "pkg-config",
+    )
 
-        with local.cwd('singularity'):
-            local['./mconfig']('--prefix=/opt/singularity')
-            cmd.make('-C', './builddir')
-            cmd.sudo[cmd.make['-C', './builddir', 'install']]()
+    with local.cwd(make_or_find_libraries_dir()):
+        cmd.wget(
+            f"https://github.com/sylabs/singularity/releases/download/v{singularity_version}/singularity-{singularity_version}.tar.gz"
+        )
+        cmd.tar("-xzf", f"singularity-{singularity_version}.tar.gz")
+
+        with local.cwd("singularity"):
+            local["./mconfig"]("--prefix=/opt/singularity")
+            cmd.make("-C", "./builddir")
+            cmd.sudo[cmd.make["-C", "./builddir", "install"]]()
+
 
 NO_DEFAULT = object()
 
@@ -772,11 +788,11 @@ class Config:
             value = value()
             setattr(self, name, value)
         return value
-        
+
     def __getattribute__(self, item):
         if item.startswith("_"):
             return super().__getattribute__(item)
-            
+
         value = object.__getattribute__(self, item)
         return self._resolve_attribute(item, value)
 
@@ -925,7 +941,12 @@ if __name__ == "__main__":
     stow_parser.set_defaults(stow=True)
 
     install_parser = subparsers.add_parser("install")
-    install_parser.add_argument('-b', '--batch', action='store_true', help="load configuration options up front rather than during installation")
+    install_parser.add_argument(
+        "-b",
+        "--batch",
+        action="store_true",
+        help="load configuration options up front rather than during installation",
+    )
     install_parser.set_defaults(install=True)
 
     args = parser.parse_args()
