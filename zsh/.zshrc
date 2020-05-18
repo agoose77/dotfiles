@@ -105,9 +105,6 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 # Automatically cd into directories entered as commands
 setopt auto_cd
 
-#Enable command correction
-setopt correct_all
-
 
 # OMZ take command
 function tkdir() {
