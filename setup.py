@@ -1012,6 +1012,7 @@ def install_all(config: Config):
     install_with_apt("fzf")
     install_with_snap("gimp")
     install_with_apt("ripgrep")
+    install_with_apt("icecc")
     install_gnome_tweak_tool()
 
     install_singularity()
