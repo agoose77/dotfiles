@@ -1,0 +1,2 @@
+# get-texat libs
+export PKG_CONFIG_PATH="/opt/get-texat/lib/pkgconfig:$PKG_CONFIG_PATH"

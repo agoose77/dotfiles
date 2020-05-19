@@ -650,6 +650,108 @@ def get_conda(virtualenv_name=None):
     return shim
 
 
+def cmake_options_from_dict(opts):
+    return [f"D{f}={v}" for f, v in opts.items()]
+
+
+@installs('root')
+def install_root_from_source(virtualenv_name: str, n_threads: int, github_token: str):
+    """
+    Find latest ROOT sources, compile them, and link to the Python virtual environment
+    :param virtualenv_name: name of PyEnv environment to link against
+    :param n_threads: number of threads to use for compiling
+    :param github_token: GitHub personal authentication token
+    :return:
+    """
+    tag = find_latest_github_tag(github_token, "root-project", "root")
+    log(f"Found latest root {tag.name}")
+
+    # Install deps
+    install_with_apt(
+        "libx11-dev",
+        "libxpm-dev",
+        "libxft-dev",
+        "libxext-dev",
+        "libpng-dev",
+        "libjpeg-dev",
+    )
+
+    # Find various paths for virtual environment
+    sysconfig_data = get_pyenv_sysconfig_data(virtualenv_name)
+
+    lib_dir_path = Path(sysconfig_data.config_vars["LIBDIR"])
+    python_bin_path = Path(sysconfig_data.executable)
+    python_lib_path = lib_dir_path / sysconfig_data.config_vars["LDLIBRARY"]
+    python_include_path = Path(sysconfig_data.paths["include"])
+
+    cmake_flags = {
+        "PYTHON_INCLUDE_DIR": python_include_path,
+        "PYTHON_LIBRARY": python_lib_path,
+        "PYTHON_EXECUTABLE": python_bin_path,
+        "python": "ON",
+        "minuit2": "ON",
+    }
+
+    log(f"Installing root {tag}")
+    with local.cwd(make_or_find_libraries_dir()):
+        cmd.makey[
+            (
+                tag.tarball_url,
+                "-j",
+                n_threads,
+                f"--version={tag.name.replace('v', '').replace('-', '.')}",
+                "--verbose",
+                "--copt",
+                *cmake_options_from_dict(cmake_flags),
+            )
+        ] & plumbum.FG
+
+    # Insert this at start of zshrc to avoid adding /usr/local/bin to head of path
+    prepend_to_zshrc(". /opt/root/bin/thisroot.sh")
+
+
+@installs('geant4.sh')
+def install_geant4(github_token: str, n_threads: int):
+    tag = find_latest_github_tag(github_token, "Geant4", "geant4")
+    cmake_flags = {
+        "GEANT4_INSTALL_DATA": "ON",
+        "GEANT4_USE_OPENGL_X11": "ON",
+        "GEANT4_USE_GDML": "ON",
+    }
+
+    install_with_apt(
+        "libxerces-c-dev",
+        "libxmu-dev",
+        "libexpat1-dev",
+        "freeglut3",
+        "freeglut3-dev",
+        "mesa-utils",
+    )
+
+    with local.cwd(make_or_find_libraries_dir()):
+        cmd.makey[
+            (
+                tag.tarball_url,
+                "-j",
+                n_threads,
+                "-p",
+                GEANT4_CPACK_PATCH_URL,
+                "--copt",
+                *cmake_options_from_dict(cmake_flags),
+                "--dflag",
+                # Exclude this path because it's a recursive symlink which causes issues
+                "path-exclude=/usr/local/lib/Geant4-*/Linux-g++/*",
+                "--verbose",
+            )
+        ] & plumbum.FG
+    prepend_to_zshrc(
+        """
+cd $(dirname $(which geant4.sh))
+. geant4.sh
+cd - > /dev/null"""
+    )
+
+
 def add_apt_repository(repo):
     cmd.sudo[cmd.add_apt_repository[repo]]()
 
@@ -918,6 +1020,17 @@ def install_all(config: Config):
         install_with_snap(package, classic=True)
 
     install_pandoc(config.GITHUB_TOKEN)
+
+    if config.CONDA_CMD and config.ROOT_USE_CONDA:
+        config.CONDA_CMD("install", "-c", "conda-forge", "root")
+    else:
+        install_root_from_source(
+            config.DEVELOPMENT_VIRTUALENV_NAME,
+            config.N_BUILD_THREADS,
+            config.GITHUB_TOKEN,
+        )
+
+    install_geant4(config.GITHUB_TOKEN, config.N_BUILD_THREADS)
     install_tex()
 
 

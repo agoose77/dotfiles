@@ -1,0 +1,2 @@
+# TexAtSim / Response
+export PATH="/opt/texat-sim/bin:/opt/texat-response/bin:$PATH"
