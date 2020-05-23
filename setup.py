@@ -706,9 +706,6 @@ def install_root_from_source(virtualenv_name: str, n_threads: int, github_token:
             )
         ] & plumbum.FG
 
-    # Insert this at start of zshrc to avoid adding /usr/local/bin to head of path
-    prepend_to_zshrc(". /opt/root/bin/thisroot.sh")
-
 
 @installs('geant4.sh')
 def install_geant4(github_token: str, n_threads: int):
