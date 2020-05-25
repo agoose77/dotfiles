@@ -49,12 +49,6 @@ ZSHRC_PATH = HOME_PATH / ".zshrc"
 ZPROFILE_PATH = HOME_PATH / ".zprofile"
 ZSHENV_PATH = HOME_PATH / ".zshenv"
 GPG_HOME_PATH = HOME_PATH / ".gnupg"
-GEANT4_CPACK_PATCH_URL = (
-    "https://gist.github.com/agoose77/fba2fc5504933b7fb2c5b8c3cfd93529/raw"
-)
-TMUX_CONF_URL = (
-    "https://gist.githubusercontent.com/agoose77/3e3b273cbfdb8a870c97ebb346beef8e/raw"
-)
 EXPORT_OS_ENVIRON_SOURCE = f"""
 import os, json, sys
 with open(sys.argv[1], 'w') as f:
@@ -809,48 +803,6 @@ def install_root_from_source(virtualenv_name: str, n_threads: int, git_tag: GitT
         ] & plumbum.FG
 
 
-@installs('geant4.sh')
-def install_geant4(github_token: str, n_threads: int):
-    tag = find_latest_github_tag(github_token, "Geant4", "geant4")
-    cmake_flags = {
-        "GEANT4_INSTALL_DATA": "ON",
-        "GEANT4_USE_OPENGL_X11": "ON",
-        "GEANT4_USE_GDML": "ON",
-    }
-
-    install_with_apt(
-        "libxerces-c-dev",
-        "libxmu-dev",
-        "libexpat1-dev",
-        "freeglut3",
-        "freeglut3-dev",
-        "mesa-utils",
-    )
-
-    with local.cwd(make_or_find_libraries_dir()):
-        cmd.makey[
-            (
-                tag.tarball_url,
-                "-j",
-                n_threads,
-                "-p",
-                GEANT4_CPACK_PATCH_URL,
-                "--copt",
-                *cmake_options_from_dict(cmake_flags),
-                "--dflag",
-                # Exclude this path because it's a recursive symlink which causes issues
-                "path-exclude=/usr/local/lib/Geant4-*/Linux-g++/*",
-                "--verbose",
-            )
-        ] & plumbum.FG
-    prepend_to_zshrc(
-        """
-cd $(dirname $(which geant4.sh))
-. geant4.sh
-cd - > /dev/null"""
-    )
-
-
 def add_apt_repository(repo):
     cmd.sudo[cmd.add_apt_repository[repo]]()
 
@@ -1047,10 +999,6 @@ def create_user_config() -> Config:
     def ROOT_GITHUB_TAG():
         return select_tag(config.GITHUB_TOKEN, 'root-project', 'root')
 
-    @config.set
-    def GEANT4_GITHUB_TAG():
-        return select_tag(config.GITHUB_TOKEN, 'Geant4', 'geant4')
-
     # Install ROOT
     @config.set
     def CONDA_CMD():
@@ -1127,7 +1075,6 @@ def install_all(config: Config):
             config.ROOT_GITHUB_TAG,
         )
 
-    install_geant4(config.GITHUB_TOKEN, config.N_BUILD_THREADS)
     install_tex()
 
 
