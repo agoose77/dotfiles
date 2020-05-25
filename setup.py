@@ -8,11 +8,13 @@ import os
 import shlex
 import sys
 import tempfile
+import itertools
+import functools
+
 from contextlib import contextmanager
-from functools import wraps
 from pathlib import Path
 from subprocess import check_output
-from typing import NamedTuple, List, Dict, Any
+from typing import NamedTuple, List, Dict, Any, Iterator
 
 #  Bootstrap ###########################################################################################################
 check_output(["sudo", "apt", "install", "-y", "python3-pip", "stow"], shell=False)
@@ -123,7 +125,7 @@ def installs(executable_or_test: Any = None):
     def decorator(func):
         signature = inspect.signature(func)
 
-        @wraps(func)
+        @functools.wraps(func)
         def installer(*args, **kwargs):
             bound_arguments = signature.bind(*args, **kwargs)
             bound_arguments.apply_defaults()
@@ -179,7 +181,7 @@ def reload_plumbum_env() -> Dict[str, Any]:
 
 
 def modifies_environment(f):
-    @wraps(f)
+    @functools.wraps(f)
     def wrapper(*args, **kwargs):
         result = f(*args, **kwargs)
         reload_plumbum_env()
@@ -324,6 +326,110 @@ def find_latest_github_tag(token: str, owner: str, name: str) -> GitTag:
         obj = obj["target"]
     url = obj["tarballUrl"]
     return GitTag(name=tag, tarball_url=url)
+
+
+def iter_github_tags(token:str, owner: str, name: str, n_cursor: int=50) -> Iterator[GitTag]:
+    """
+    Iterate over Tag object from GitHub in alphabetical order using GraphQL
+
+    :param token: GitHub personal authentication token
+    :param owner: Repository owner
+    :param name: Repository name
+    :param n_cursor: Pagination size
+    :return:
+    """
+    from string import Template
+    from itertools import count
+    query_template = Template("""
+{
+    repository(owner:"$owner", name: "$name") {
+        refs(refPrefix: "refs/tags/", first: $nCursor, after: "$cursor", orderBy: {field: ALPHABETICAL, direction: DESC}) {
+          edges {
+            cursor
+            node {
+              name
+              target {
+                ... on Tag {
+                  name
+                  target {
+                    ... on Commit {
+                      tarballUrl
+                    }
+                  }
+                }
+                ... on Commit {
+                  tarballUrl
+                }
+              }
+            }
+          }
+        }
+    }
+}
+    """)
+    cursor = ""
+    for i in count():
+        query = query_template.substitute(
+            owner="root-project",
+            name="root",
+            nCursor=n_cursor,
+            cursor=cursor
+        )
+        result = execute_github_graphql_query(token, query)
+        edges = result["data"]["repository"]["refs"]["edges"]
+        if not edges:
+            break
+
+        for edge in edges:
+            obj = edge["node"]
+            cursor = edge["cursor"]
+            tag = obj["name"]
+
+            while "target" in obj:
+                obj = obj["target"]
+
+            try:
+                tarball_url = obj['tarballUrl']
+            except KeyError:
+                continue
+            yield GitTag(name=tag, tarball_url=tarball_url)
+
+def select_tag(token: str, owner: str, project: str, n_options: int=5) -> GitTag:
+    """
+    Ask the user to select a Git tag for a particular repository
+
+    :param token: GitHub personal authentication token
+    :param owner: Repository owner
+    :param name: Repository name
+    :param n_cursor: Pagination size
+    :return: the matching GitTag instance
+    """
+    latest_tags = [*itertools.islice(iter_github_tags(token, 'root-project', 'root'), n_options)]
+
+    print(f"Select tag for {owner}/{project}:")
+    while True:
+        for i, t in enumerate(latest_tags):
+            print(f"({i}) {t.name}")
+
+        print(f"({i+1}) other")
+
+        try:
+            option = int(input("Select an option: "))
+        except ValueError:
+            continue
+
+        # Custom user input
+        if option == i+1:
+            tag_name = input("Enter tag name: ")
+            try:
+                return next(t for t in iter_github_tags(token, 'root-project', 'root') if t.name == tag_name)
+            except StopIteration:
+                continue
+
+        try:
+            return latest_tags[option]
+        except IndexError:
+            continue
 
 
 @modifies_environment
@@ -655,7 +761,7 @@ def cmake_options_from_dict(opts):
 
 
 @installs('root')
-def install_root_from_source(virtualenv_name: str, n_threads: int, github_token: str):
+def install_root_from_source(virtualenv_name: str, n_threads: int, git_tag: GitTag):
     """
     Find latest ROOT sources, compile them, and link to the Python virtual environment
     :param virtualenv_name: name of PyEnv environment to link against
@@ -663,9 +769,6 @@ def install_root_from_source(virtualenv_name: str, n_threads: int, github_token:
     :param github_token: GitHub personal authentication token
     :return:
     """
-    tag = find_latest_github_tag(github_token, "root-project", "root")
-    log(f"Found latest root {tag.name}")
-
     # Install deps
     install_with_apt(
         "libx11-dev",
@@ -692,14 +795,13 @@ def install_root_from_source(virtualenv_name: str, n_threads: int, github_token:
         "minuit2": "ON",
     }
 
-    log(f"Installing root {tag}")
     with local.cwd(make_or_find_libraries_dir()):
         cmd.makey[
             (
-                tag.tarball_url,
+                git_tag.tarball_url,
                 "-j",
                 n_threads,
-                f"--version={tag.name.replace('v', '').replace('-', '.')}",
+                f"--version={git_tag.name.replace('v', '').replace('-', '.')}",
                 "--verbose",
                 "--copt",
                 *cmake_options_from_dict(cmake_flags),
@@ -876,6 +978,13 @@ def yes_no_to_bool(answer: str) -> bool:
     return answer.lower().strip() in {"y", "yes", "1"}
 
 
+class DeferredValueFactory(functools.partial):
+    """Wrapper class which represents a deferred configuration value"""
+
+
+deferred = DeferredValueFactory
+
+
 class Config:
     """Configuration holder class.
 
@@ -904,25 +1013,8 @@ class Config:
             self._resolve_attribute(name, value)
 
 
-class DeferredValueFactory:
-    """Wrapper class which represents a deferred configuration value"""
-
-    def __init__(self, func):
-        self.func = func
-
-    def __call__(self):
-        return self.func()
-
-
-deferred = DeferredValueFactory
-
-
 def deferred_user_input(prompt: str, default=NO_DEFAULT, converter=None):
-    @deferred
-    def user_input():
-        return get_user_input(prompt, default, converter)
-
-    return user_input
+    return deferred(get_user_input, prompt, default, converter)
 
 
 def create_user_config() -> Config:
@@ -951,6 +1043,13 @@ def create_user_config() -> Config:
     config.ROOT_USE_CONDA = deferred_user_input(
         "Use Conda package for ROOT?", "y", yes_no_to_bool
     )
+    @config.set
+    def ROOT_GITHUB_TAG():
+        return select_tag(config.GITHUB_TOKEN, 'root-project', 'root')
+
+    @config.set
+    def GEANT4_GITHUB_TAG():
+        return select_tag(config.GITHUB_TOKEN, 'Geant4', 'geant4')
 
     # Install ROOT
     @config.set
@@ -1025,7 +1124,7 @@ def install_all(config: Config):
         install_root_from_source(
             config.DEVELOPMENT_VIRTUALENV_NAME,
             config.N_BUILD_THREADS,
-            config.GITHUB_TOKEN,
+            config.ROOT_GITHUB_TAG,
         )
 
     install_geant4(config.GITHUB_TOKEN, config.N_BUILD_THREADS)
