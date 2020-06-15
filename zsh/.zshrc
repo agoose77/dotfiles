@@ -43,7 +43,7 @@ zinit load ogham/exa
 zinit ice ${WAIT} lucid
 zinit load DarrinTisdale/zsh-aliases-exa
 
-zinit ice ${WAIT} lucid atinit"zpcompinit; zpcdreplay" atload"FAST_HIGHLIGHT[chroma-make]="
+zinit ice ${WAIT} lucid atinit"zpcompinit; zpcdreplay" 
 zinit load zdharma/fast-syntax-highlighting
 
 export ZSH_AUTOSUGGEST_USE_ASYNC=1 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
