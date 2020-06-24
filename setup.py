@@ -511,8 +511,11 @@ def install_tex():
 
         directory = next((p for p in (local.cwd // "install-tl*") if p.is_dir()))
 
-        with local.cwd(directory):
-            proc = (cmd.sudo[local[local.cwd / "install-tl"]] << "I\n") & plumbum.FG
+        with local.cwd(directory), local.env(
+            TEXLIVE_INSTALL_PREFIX="/usr/local/texlive",
+            TEXLIVE_INSTALL_TEXDIR="/usr/local/texlive/latest"
+        ):
+            (cmd.sudo[local[local.cwd / "install-tl"]] << "I\n")()
 
 
 def get_system_python_version() -> str:
