@@ -43,6 +43,10 @@ zinit load ogham/exa
 zinit ice ${WAIT} lucid
 zinit load DarrinTisdale/zsh-aliases-exa
 
+# Micro editor
+zinit ice ${WAIT} lucid from"gh-r" as"program" bpick"*linux64*" extract"" mv"micro*/micro -> micro"
+zinit load zyedidia/micro
+
 zinit ice ${WAIT} lucid atinit"zpcompinit; zpcdreplay" 
 zinit load zdharma/fast-syntax-highlighting
 
