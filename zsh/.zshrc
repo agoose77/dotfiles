@@ -63,9 +63,6 @@ zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
 zinit ice ${WAIT} lucid
 zinit light bobthecow/git-flow-completion
 
-# Fd-find alias
-alias fd='fdfind'
-
 # Tmux aliases
 alias ta='tmux attach -t'
 alias tad='tmux attach -d -t'
@@ -73,12 +70,6 @@ alias ts='tmux new-session -s'
 alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
-
-# pyenv
-if [[ -d "$HOME/.pyenv" ]]; then
-	zinit ice ${WAIT} lucid atload'eval "$(pyenv virtualenv-init - zsh)"'
-	zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
-fi
 
 # direnv
 ## Silence direnv
@@ -97,7 +88,6 @@ setopt SHARE_HISTORY
 # Automatically cd into directories entered as commands
 setopt auto_cd
 
-
 # OMZ take command
 function tkdir() {
   mkdir -p $@ && cd ${@:$#}
@@ -108,12 +98,6 @@ alias jc="jupyter console"
 alias jl="jupyter lab"
 alias jle="jupyter labextension"
 alias jla="jupyter lab --browser='google-chrome --app=%s'"
-
-# Wallpapers
-. $HOME/.wallpapers/wallpaper.sh
-
-# Change colors for ssh
-alias ssh='TERM=xterm-256color ssh'
 
 # Move to trash
 alias tt='gio trash'
