@@ -118,5 +118,13 @@ alias ssh='TERM=xterm-256color ssh'
 # Move to trash
 alias tt='gio trash'
 
+# Rename i3 workspace
+rename-workspace () {
+	num=$(i3-msg -t get_workspaces | jq ".[] | select(.focused).num")
+	name="$(xrescat i3-wm.workspace.${num}.name || xrescat i3-wm.workspace.0${num}.name) $1"
+	i3-msg "rename workspace to \"$name\"" >/dev/null
+}
+alias rnw='rename-workspace'
+
 (( ! ${+functions[p10k]} )) || p10k finalize
 
