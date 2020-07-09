@@ -1093,12 +1093,19 @@ def stow_dotfiles():
             cmd.stow(path.name, "--no-folding")
 
 
+def install_crontab():
+    cmd.crontab(THIS_DIR / "crontab")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
 
     stow_parser = subparsers.add_parser("stow")
     stow_parser.set_defaults(stow=True)
+
+    crontab_parser = subparsers.add_parser("crontab")
+    crontab_parser.set_defaults(crontab=True)
 
     install_parser = subparsers.add_parser("install")
     install_parser.add_argument(
@@ -1118,5 +1125,7 @@ if __name__ == "__main__":
         install_all(config)
     elif hasattr(args, "stow"):
         stow_dotfiles()
+    elif hasattr(args, "crontab"):
+        install_crontab()
     else:
         code.interact(local=locals())
