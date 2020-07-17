@@ -98,6 +98,10 @@ alias jla="jupyter lab --browser='google-chrome --app=%s'"
 # Move to trash
 alias tt='gio trash'
 
+# sd (sed replacement)
+zinit ice ${WAIT} lucid from"gh-r" as"program" mv"**/sd -> sd" pick"sd"
+zinit light chmln/sd
+
 # History
 HISTFILE=~/.histfile
 HISTSIZE=10000
