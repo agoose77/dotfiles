@@ -118,6 +118,9 @@ rename-workspace () {
 }
 alias rnw='rename-workspace'
 
+# sd (sed replacement)
+zinit ice ${WAIT} lucid from"gh-r" as"program" mv"**/sd -> sd" pick"sd"
+zinit light chmln/sd
 
 # History
 HISTFILE=~/.histfile
