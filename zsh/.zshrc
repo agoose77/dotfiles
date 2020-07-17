@@ -36,19 +36,20 @@ zinit ${WAIT} lucid for \
 	OMZ::plugins/git/git.plugin.zsh
 
 zinit ice ${WAIT} lucid 
-zinit load agkozak/zsh-z
+zinit light agkozak/zsh-z
 
-zinit ice ${WAIT} lucid from"gh-r" as"program" mv"exa* -> exa"
-zinit load ogham/exa
+zinit ice ${WAIT} lucid from"gh-r" as"program" mv"exa* -> exa" pick"exa"
+zinit light ogham/exa
+
 zinit ice ${WAIT} lucid
-zinit load DarrinTisdale/zsh-aliases-exa
+zinit light DarrinTisdale/zsh-aliases-exa
 
 zinit ice ${WAIT} lucid atinit"zpcompinit; zpcdreplay" 
-zinit load zdharma/fast-syntax-highlighting
+zinit light zdharma/fast-syntax-highlighting
 
 export ZSH_AUTOSUGGEST_USE_ASYNC=1 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 zinit ice ${WAIT} lucid atload"_zsh_autosuggest_start"
-zinit load zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-autosuggestions
 
 # Disable config wizard
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
@@ -88,15 +89,6 @@ zinit ice ${WAIT} lucid from"gh-r" as"program" mv"direnv* -> direnv" \
     pick"direnv" src="zhook.zsh"
 zinit light direnv/direnv
 
-# History
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
-setopt SHARE_HISTORY
-
-# Automatically cd into directories entered as commands
-setopt auto_cd
-
 
 # OMZ take command
 function tkdir() {
@@ -125,6 +117,16 @@ rename-workspace () {
 	i3-msg "rename workspace to \"$name\"" >/dev/null
 }
 alias rnw='rename-workspace'
+
+
+# History
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY
+
+# Automatically cd into directories entered as commands
+setopt auto_cd
 
 (( ! ${+functions[p10k]} )) || p10k finalize
 
