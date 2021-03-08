@@ -101,6 +101,11 @@ alias jl="jupyter lab"
 alias jle="jupyter labextension"
 alias jla="jupyter lab --browser='google-chrome --app=%s'"
 
+# Google 
+iframe() {
+  google-chrome --app="$1"
+}
+
 # Wallpapers
 . $HOME/.wallpapers/wallpaper.sh
 
