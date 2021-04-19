@@ -635,18 +635,6 @@ def install_development_virtualenv(python_version: str, virtualenv_name: str = N
         )
 
 
-@installs("micro")
-def install_micro():
-    """
-    Install the micro editor
-    :return:
-    """
-    # Set default editor in ZSH
-    with local.cwd("/tmp"):
-        (cmd.curl["https://getmic.ro"] | cmd.bash)()
-        cmd.sudo[cmd.mv["micro", "/usr/local/bin"]]()
-
-
 def create_gpg_key(name, email_address, key_length):
     import gnupg
 
@@ -1049,7 +1037,7 @@ def install_all(config: Config):
         config.DEVELOPMENT_PYTHON_VERSION, config.DEVELOPMENT_VIRTUALENV_NAME
     )
 
-    install_micro()
+    install_with_snap("micro", classic=True)
     install_with_snap("thunderbird", beta=True)
     install_with_snap("spotify")
     install_with_snap("mathpix-snipping-tool")
