@@ -25,81 +25,65 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 ### End of Zinit's installer chunk
-zinit ${WAIT} lucid for \
-	OMZ::lib/git.zsh \
-	OMZ::lib/completion.zsh \
-	OMZ::lib/grep.zsh \
-	OMZ::lib/directories.zsh \
-	OMZ::lib/history.zsh \
-	OMZ::lib/functions.zsh \
-	OMZ::lib/key-bindings.zsh \
-	OMZ::plugins/git/git.plugin.zsh
 
-zinit ice ${WAIT} lucid 
-zinit light agkozak/zsh-z
+# History
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+setopt SHARE_HISTORY
 
-zinit ice ${WAIT} lucid from"gh-r" as"program" mv"exa* -> exa" pick"exa"
-zinit light ogham/exa
+# Automatically cd into directories entered as commands
+setopt auto_cd
 
-zinit ice ${WAIT} lucid
-zinit light DarrinTisdale/zsh-aliases-exa
-
-zinit ice ${WAIT} lucid atinit"zpcompinit; zpcdreplay" 
-zinit light zdharma/fast-syntax-highlighting
-
-export ZSH_AUTOSUGGEST_USE_ASYNC=1 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-zinit ice ${WAIT} lucid atload"_zsh_autosuggest_start"
-zinit light zsh-users/zsh-autosuggestions
-
+export ZSH_AUTOSUGGEST_USE_ASYNC=1 
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+    
 # Disable config wizard
-POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 zinit ice depth=1 lucid atload'[[ ! -f ~/.p10k.zsh ]] && true || source ~/.p10k.zsh; _p9k_precmd' nocd
 zinit light romkatv/powerlevel10k
+    
+# pyenv
+if [[ -d "$HOME/.pyenv" ]]; then
+	zinit ${WAIT} lucid for \
+	    atload'eval "$(pyenv virtualenv-init - zsh)"' OMZP::pyenv/pyenv.plugin.zsh
+fi
+
+# Silence direnv
+export DIRENV_LOG_FORMAT=
+
+# Non-async plugins
+zinit ${WAIT} lucid light-mode for \
+    as"program" mv"**/exa* -> exa" pick"bin/exa" ogham/exa \
+    DarrinTisdale/zsh-aliases-exa \
+    as"program" mv"direnv* -> direnv" \
+        atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
+        pick"direnv" src="zhook.zsh" direnv/direnv \
+	OMZL::git.zsh \
+	OMZL::completion.zsh \
+	OMZL::grep.zsh \
+	OMZL::directories.zsh \
+	OMZL::history.zsh \
+	OMZL::functions.zsh \
+	OMZL::key-bindings.zsh \
+	OMZP::git/git.plugin.zsh \
+	OMZP::tmux/tmux.plugin.zsh \
+    OMZP::git-flow/git-flow.plugin.zsh \
+    agkozak/zsh-z \
+    atinit"zpcompinit; zpcdreplay" zdharma/fast-syntax-highlighting \
+    atload"_zsh_autosuggest_start" zsh-users/zsh-autosuggestions \
+    blockf bobthecow/git-flow-completion \
+    _local/jupyter \
+    _local/i3 \
+    as"program" mv"**/sd -> sd" pick"sd" chmln/sd \
+    as"completion" OMZP::docker/_docker 
 
 # TODO tracking
 alias todo='git grep --no-pager  -EI "TODO|FIXME"'
 alias td='todo'
-zinit ice ${WAIT} lucid
-zinit snippet OMZ::plugins/git-flow/git-flow.plugin.zsh
-zinit ice ${WAIT} lucid
-zinit light bobthecow/git-flow-completion
 
 # Fd-find alias
 alias fd='fdfind'
-
-# Tmux aliases
-alias ta='tmux attach -t'
-alias tad='tmux attach -d -t'
-alias ts='tmux new-session -s'
-alias tl='tmux list-sessions'
-alias tksv='tmux kill-server'
-alias tkss='tmux kill-session -t'
-
-# direnv
-## Silence direnv
-export DIRENV_LOG_FORMAT=
-zinit ice ${WAIT} lucid from"gh-r" as"program" mv"direnv* -> direnv" \
-    atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
-    pick"direnv" src="zhook.zsh"
-zinit light direnv/direnv
-
-# pyenv
-if [[ -d "$HOME/.pyenv" ]]; then
-	zinit ice ${WAIT} lucid atload'eval "$(pyenv virtualenv-init - zsh)"'
-	zinit snippet OMZ::plugins/pyenv/pyenv.plugin.zsh
-fi
-
-
-# OMZ take command
-function tkdir() {
-  mkdir -p $@ && cd ${@:$#}
-}
-
-# Jupyter aliases
-alias jc="jupyter console"
-alias jl="jupyter lab"
-alias jle="jupyter labextension"
-alias jla="jupyter lab --browser='google-chrome --app=%s'"
 
 # Google 
 iframe() {
@@ -114,27 +98,6 @@ alias ssh='TERM=xterm-256color ssh'
 
 # Move to trash
 alias tt='gio trash'
-
-# Rename i3 workspace
-rename-workspace () {
-	num=$(i3-msg -t get_workspaces | jq ".[] | select(.focused).num")
-	name="$(xrescat i3-wm.workspace.${num}.name || xrescat i3-wm.workspace.0${num}.name) $1"
-	i3-msg "rename workspace to \"$name\"" >/dev/null
-}
-alias rnw='rename-workspace'
-
-# sd (sed replacement)
-zinit ice ${WAIT} lucid from"gh-r" as"program" mv"**/sd -> sd" pick"sd"
-zinit light chmln/sd
-
-# History
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
-setopt SHARE_HISTORY
-
-# Automatically cd into directories entered as commands
-setopt auto_cd
 
 (( ! ${+functions[p10k]} )) || p10k finalize
 
