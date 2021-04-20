@@ -54,9 +54,9 @@ export DIRENV_LOG_FORMAT=
 
 # Non-async plugins
 zinit ${WAIT} lucid light-mode for \
-    as"program" mv"**/exa* -> exa" pick"bin/exa" ogham/exa \
+    from"gh-r" as"program" mv"**/exa* -> exa" pick"bin/exa" ogham/exa \
     DarrinTisdale/zsh-aliases-exa \
-    as"program" mv"direnv* -> direnv" \
+    from"gh-r" as"program" mv"direnv* -> direnv" \
         atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' \
         pick"direnv" src="zhook.zsh" direnv/direnv \
 	OMZL::git.zsh \
@@ -75,7 +75,7 @@ zinit ${WAIT} lucid light-mode for \
     blockf bobthecow/git-flow-completion \
     _local/jupyter \
     _local/i3 \
-    as"program" mv"**/sd -> sd" pick"sd" chmln/sd \
+    from"gh-r" as"program" mv"sd* -> sd" pick"sd*" chmln/sd \
     as"completion" OMZP::docker/_docker 
 
 # TODO tracking
