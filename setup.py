@@ -863,6 +863,17 @@ def install_singularity(singularity_version="3.5.3"):
             cmd.sudo[cmd.make["-C", "./builddir", "install"]]()
 
 
+@installs("sd")
+def install_sd(sd_version="0.7.6"):
+    with local.tempdir() as d, local.cwd(d):
+        cmd.wget(
+            f"https://github.com/chmln/sd/releases/download/v{sd_version}/sd-v{sd_version}-x86_64-unknown-linux-musl",
+            "-O",
+            "sd"
+        )
+        cmd.chmod("+x", "sd")
+        cmd.sudo[cmd.mv["sd", "/usr/local/bin"]]()
+
 NO_DEFAULT = object()
 
 
@@ -1050,6 +1061,7 @@ def install_all(config: Config):
     install_with_snap("gimp")
     install_with_apt("ripgrep")
     install_with_apt("icecc")
+    install_sd()
     install_gnome_tweak_tool()
 
     install_singularity(config.SINGULARITY_VERSION)
