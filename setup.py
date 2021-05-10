@@ -1045,6 +1045,7 @@ def install_all(config: Config):
     install_with_apt("polari")
     install_with_apt("vlc")
     install_with_apt("fzf")
+    install_with_apt("direnv")
     install_with_apt("bat")
     install_with_snap("gimp")
     install_with_apt("ripgrep")
