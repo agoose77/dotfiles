@@ -985,6 +985,11 @@ def create_user_config() -> Config:
     def ROOT_GITHUB_TAG():
         return select_tag(config.GITHUB_TOKEN, 'root-project', 'root')
 
+    config.SINGULARITY_VERSION = deferred_user_input(
+        "Enter singularity version",
+        "3.7.3"
+    )
+
     # Install ROOT
     @config.set
     def CONDA_CMD():
@@ -1047,7 +1052,7 @@ def install_all(config: Config):
     install_with_apt("icecc")
     install_gnome_tweak_tool()
 
-    install_singularity()
+    install_singularity(config.SINGULARITY_VERSION)
 
     for package in ("pycharm-professional", "clion", "webstorm"):
         install_with_snap(package, classic=True)
