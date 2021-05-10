@@ -450,11 +450,6 @@ def install_zsh():
     cmd.sudo[cmd.chsh["-s", local.which("zsh"), os.environ["USER"]]]()
 
 
-@installs("tmux")
-def install_tmux():
-    install_with_apt("tmux")
-
-
 @installs("google-chrome")
 def install_chrome():
     deb_name = "google-chrome-stable_current_amd64.deb"
@@ -1029,7 +1024,7 @@ def install_all(config: Config):
 
     install_chrome()
     install_with_apt("fd-find")
-    install_tmux()
+    install_with_apt("tmux")
 
     install_pyenv()
     install_pyenv_sys_python(config.SYSTEM_VENV_NAME)
