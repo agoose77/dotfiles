@@ -1,2 +1,2 @@
 zinit ${ZINIT_WAIT-wait} lucid for \
- OMZP::pyenv/pyenv.plugin.zsh
+ atload'eval "$(pyenv virtualenv-init - zsh)"' OMZP::pyenv/pyenv.plugin.zsh
