@@ -2,7 +2,9 @@
 This repo contains my dotfiles (tada)! A new system installation is performed in four steps:
 
 ## Structure
-Most RC files like `.profile`, `.zshrc` have `.d` equivalents here, so any combination of subdirectories can be stow-ed without manually merging RC files. The `.zprofile` file only sources `.profile`. This is because in an ideal world we'd only have `.zprofile`, but GDM only sources `.profile` explicitly. 
+Most RC files like `.profile`, `.zshrc` have `.d` equivalents here, so any combination of subdirectories can be stow-ed without manually merging RC files. 
+The `.zprofile` file only sources `.profile`. This is because in an ideal world we'd only have `.zprofile`, but GDM only sources `.profile` explicitly. 
+So, to ensure that the *system* has access to useful paths, we define `.profile`.
 
 ## GPG
 1. Install gnupg with `sudo apt install gnupg`
