@@ -1092,7 +1092,7 @@ def stow_dotfiles():
             if path.name.startswith("."):
                 continue
 
-            cmd.stow(path.name, "--no-folding")
+            cmd.stow(path.name, "-R",  "--no-folding")
 
 
 def install_crontab():
