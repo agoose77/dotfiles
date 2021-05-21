@@ -186,8 +186,11 @@ def modifies_environment(f):
 
 #  Installers ##########################################################################################################
 @installs()
-def install_with_pip(*packages):
-    return check_output([sys.executable, "-m", "pip", "install", *packages])
+def install_with_pip(*packages, user=False):
+    args = [sys.executable, "-m", "pip", "install"]
+    if user:
+        args.append("--user")
+    return check_output([*args, *packages])
 
 
 @installs()
@@ -1063,6 +1066,7 @@ def install_all(config: Config):
     install_with_apt("icecc")
     install_sd()
     install_gnome_tweak_tool()
+    install_with_pip("pipx", user=True)
 
     install_singularity(config.SINGULARITY_VERSION)
 
