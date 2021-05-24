@@ -1,4 +1,3 @@
 [split]
 command=$HOME/.config/regolith/i3xrocks/split-indicator
 interval=persist
-I3XROCKS_LAYOUT_BLOCKICON=

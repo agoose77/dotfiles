@@ -7,10 +7,9 @@ def get_config(name, class_, resource, default=""):
     path = name, class_, resource
     xresource = '.'.join(path)
     env = "_".join(path).upper()
-    #print(env, os.environ.keys())
     
     try:
-        return os.environ[resource]
+        return os.environ[env]
     except KeyError:
         return subprocess.check_output(
             ['xrescat', xresource, default]
