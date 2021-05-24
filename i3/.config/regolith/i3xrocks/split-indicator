@@ -4,7 +4,11 @@ import i3ipc, os, subprocess
 i3 = i3ipc.Connection()
 
 def get_config(name, class_, resource, default=""):
-    xresource = f"{name}.{class_}.{resource}"
+    path = name, class_, resource
+    xresource = '.'.join(path)
+    env = "_".join(path).upper()
+    #print(env, os.environ.keys())
+    
     try:
         return os.environ[resource]
     except KeyError:
@@ -15,11 +19,11 @@ def get_config(name, class_, resource, default=""):
 split_v_text = get_config('i3xrocks', 'layout', 'verticalIcon', '')
 split_h_text = get_config('i3xrocks', 'layout', 'horizontalIcon', '')
 split_none_text = get_config('i3xrocks', 'layout', 'noneIcon', '')
-label_icon = get_config('i3xrocks', 'layout', 'blockIcon', '')
+label_icon = get_config('i3xrocks', 'layout', 'blockIcon', '')
 
-value_colour = get_config('color', 'i3xrocks.value.color', "#D8DEE9")
-label_colour = get_config('label_color', 'i3xrocks.label.color', "#7B8394")
-value_font = get_config('font', 'i3xrocks.value.font', "Source Code Pro Medium 13")
+value_colour = get_config('i3xrocks', 'value', 'color', "#D8DEE9")
+label_colour = get_config('i3xrocks', 'label', 'color', "#7B8394")
+value_font = get_config('i3xrocks', 'value', 'font', "Source Code Pro Medium 13")
 
 
 layout_text_map = {
