@@ -1,0 +1,3 @@
+! Move output icons to primary display
+i3-wm.bar.trayoutput: primary
+!i3xrocks.layout.icon @

@@ -1,4 +1,2 @@
 ! -- This points to the default looks Xresource root file.
-#include "/etc/regolith/styles/ayu-mirage/root"
-
-i3-wm.bar.trayoutput: primary
+#include "/etc/regolith/styles/dracula/root"
