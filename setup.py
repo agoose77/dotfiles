@@ -800,8 +800,8 @@ def add_apt_repository(repo):
 def install_regolith():
     add_apt_repository("ppa:regolith-linux/release")
     install_with_apt(
-        "regolith-desktop",
-        "regolith-look-ayu-mirage",
+        "regolith-desktop-standard",
+        "regolith-look-dracula",
         "i3xrocks-battery",
         "i3xrocks-cpu-usage",
         "i3xrocks-media-player",
@@ -818,10 +818,6 @@ def install_regolith():
     # Copy blocks to local install
     for block_path in local.path("/etc/regolith/i3xrocks/conf.d").iterdir():
         cmd.cp(block_path, local.path("~/.config/regolith/i3xrocks/conf.d"))
-
-    # Don't theme, handled by dotfiles
-    # cmd.regolith_look("set", "ayu-mirage")
-    # cmd.regolith_look("refresh")
 
 
 @installs("alacritty")
@@ -1135,3 +1131,4 @@ if __name__ == "__main__":
         install_crontab()
     else:
         code.interact(local=locals())
+[6;5~]
