@@ -806,7 +806,6 @@ def install_regolith():
         "i3xrocks-cpu-usage",
         "i3xrocks-media-player",
         "i3xrocks-memory",
-        "i3xrocks-net-traffic",
         "i3xrocks-temp",
         "i3xrocks-time",
         "i3xrocks-volume",
