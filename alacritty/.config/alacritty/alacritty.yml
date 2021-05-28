@@ -27,4 +27,4 @@ font:
 
 # Import theme
 import: 
-  - ~/.config/alacritty/darcula.yml
+  - ~/.config/alacritty/dracula.yml
