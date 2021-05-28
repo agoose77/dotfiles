@@ -3,22 +3,26 @@ import i3ipc, os, subprocess
  
 i3 = i3ipc.Connection()
 
-def get_config(block_name, xresource_name, default=""):
+def get_config(name, class_, resource, default=""):
+    path = name, class_, resource
+    xresource = '.'.join(path)
+    env = "_".join(path).upper()
+    
     try:
-        return os.environ[block_name]
+        return os.environ[env]
     except KeyError:
         return subprocess.check_output(
-            ['xrescat', f'i3xrocks.{xresource_name}', default]
+            ['xrescat', xresource, default]
         ).decode()
         
-split_v_text = get_config('icon_split_v', 'label.split.vertical', '')
-split_h_text = get_config('icon_split_h', 'label.split.horizontal', '')
-split_none_text = get_config('icon_split_none','label.split.none', '')
-label_icon = get_config('icon','label.split', '')
+split_v_text = get_config('i3xrocks', 'layout', 'verticalIcon', '')
+split_h_text = get_config('i3xrocks', 'layout', 'horizontalIcon', '')
+split_none_text = get_config('i3xrocks', 'layout', 'noneIcon', '')
+label_icon = get_config('i3xrocks', 'layout', 'blockIcon', '')
 
-value_colour = get_config('color', 'value.color', "#D8DEE9")
-label_colour = get_config('label_color', 'label.color', "#7B8394")
-value_font = get_config('font', 'value.font', "Source Code Pro Medium 13")
+value_colour = get_config('i3xrocks', 'value', 'color', "#D8DEE9")
+label_colour = get_config('i3xrocks', 'label', 'color', "#7B8394")
+value_font = get_config('i3xrocks', 'value', 'font', "Source Code Pro Medium 13")
 
 
 layout_text_map = {

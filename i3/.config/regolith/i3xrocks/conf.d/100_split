@@ -1,4 +1,3 @@
 [split]
 command=$HOME/.config/regolith/i3xrocks/split-indicator
-icon=
 interval=persist
