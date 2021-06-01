@@ -1130,4 +1130,3 @@ if __name__ == "__main__":
         install_crontab()
     else:
         code.interact(local=locals())
-[6;5~]
