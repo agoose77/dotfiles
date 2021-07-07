@@ -5,6 +5,7 @@
     "autosu": false,
     "backup": true,
     "basename": false,
+    "bookmark": true,
     "colorcolumn": 0,
     "colorscheme": "dracula",
     "comment": true,
