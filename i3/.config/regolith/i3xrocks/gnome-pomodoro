@@ -55,11 +55,11 @@ def display_pomodoro(state):
 
 def handle_input(button):
     if button == "1":
-        subprocess.check_call(["gnome-pomodoro", "--start"])
+        subprocess.check_call(["gnome-pomodoro"])
     elif button == "2":
         subprocess.check_call(["gnome-pomodoro", "--pause-resume"])
     else:
-        subprocess.check_call(["gnome-pomodoro", "--stop"])
+        subprocess.check_call(["gnome-pomodoro", "--start-stop"])
 
 
 
