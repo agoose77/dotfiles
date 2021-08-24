@@ -65,11 +65,11 @@ def handle_input(button):
 
 if __name__ == "__main__":
     proxy = pomodoro_api.get_dbus_proxy()
-    state = pomodoro_api.get_proxy_state(proxy)
     
     if button := os.environ.get("BLOCK_BUTTON"):
         handle_input(button)
         
+    state = pomodoro_api.get_proxy_state(proxy)
     display_pomodoro(state)
     
     
