@@ -2,8 +2,14 @@
 This repo contains my dotfiles (tada)! A new system installation is performed in four steps:
 
 ## Structure
-Most RC files like `.profile`, `.zshrc` have `.d` equivalents here, so any combination of subdirectories can be stow-ed without manually merging RC files. 
-The `.zprofile` file only sources `.profile`. This is because in an ideal world we'd only have `.zprofile`, but GDM only sources `.profile` explicitly. 
+There are two `config.d`-like directories used, so that different configurations can be loaded without merging:
+- `.profile.d`
+- `.zshrc.d`
+
+The `.zprofile` file only sources `.profile`. This is because in an ideal world we'd only have `.zprofile`, but GDM only sources `.profile` explicitly:
+
+[![Diagram of Bash startup sequence](https://www.solipsys.co.uk/images/BashStartupFiles1.png)](http://www.solipsys.co.uk/new/BashInitialisationFiles.html)
+
 So, to ensure that the *system* has access to useful paths, we define `.profile`.
 
 ## GPG
@@ -14,36 +20,13 @@ So, to ensure that the *system* has access to useful paths, we define `.profile`
 1. Copy SSH key for GitHub from `ssh-add -L`
 
 ## Setup
-## TLDR
-```bash
-sudo apt install git git-lfs && git lfs install
-git clone --recurse-submodules git@github.com:agoose77/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-./setup.py stow
-./setup.py install
-```
-
-### Clone  
-To install the dotfiles, clone this repo and cd
+To install the dotfiles, clone this repo and `cd`
 ```bash
 sudo apt install git git-lfs && git lfs install
 git clone --recurse-submodules git@github.com:agoose77/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ```
-Then simply run the stow command
-```bash
-./setup.py stow
-```
-or alternatively, run the equivalent bash command
+Then simply run the `stow` command
 ```python
 find * -type d -maxdepth 0  -exec stow --no-folding {} \;
-```
-### Install  
-The setup script should be idempotent for the same configuration:
-```bash
-./setup.py install
-```
-Optionally provide the "batch" argument to load configuration options up front, e.g.
-```bash
-./setup.py install -b
 ```
