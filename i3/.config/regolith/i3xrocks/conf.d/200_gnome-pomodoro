@@ -1,0 +1,3 @@
+[gnome-pomodoro]
+command=$HOME/.config/regolith/i3xrocks/gnome-pomodoro
+interval=5
