@@ -1,2 +1,0 @@
-for path in pg`.xonshrc.d/*.xsh`:
-    source @(path)
