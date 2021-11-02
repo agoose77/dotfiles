@@ -2,6 +2,8 @@ import sys as _sys
 import os as _os
 
 from xonsh.built_ins import XSH as _XSH
+import xonsh.prompt.env
+
 from types import ModuleType as _ModuleType
 
 _mod = _ModuleType("xontrib.conda",
@@ -17,27 +19,11 @@ def _find_env_name():
     """Finds the current environment name from $VIRTUAL_ENV or
     $CONDA_DEFAULT_ENV if that is set.
     """
-    env_path = _XSH.env.get("VIRTUAL_ENV", _XSH.env.get("CONDA_DEFAULT_ENV", ""))
-
-    env_name = _os.path.basename(env_path)
+    env_path = _XSH.env.get("VIRTUAL_ENV", "")
+    if env_path:
+        env_name = _os.path.basename(env_path)
+    else:
+        env_name = _XSH.env.get("CONDA_DEFAULT_ENV", "")
     return env_name
 
-
-def _env_name():
-    env_name = _find_env_name()
-    if _XSH.env.get("VIRTUAL_ENV_DISABLE_PROMPT") or not env_name:
-        # env name prompt printing disabled, or no environment; just return
-        return
-
-    venv_prompt = _XSH.env.get("VIRTUAL_ENV_PROMPT")
-    if venv_prompt is not None:
-        return venv_prompt
-    else:
-        pf = _XSH.shell.prompt_formatter
-        pre = pf._get_field_value("env_prefix")
-        post = pf._get_field_value("env_postfix")
-
-        return pre + env_name + post
-
-
-$PROMPT_FIELDS['env_name'] = _env_name
+xonsh.prompt.env.find_env_name = _find_env_name
