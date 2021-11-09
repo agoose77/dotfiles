@@ -1,6 +1,4 @@
 __xonsh__.abbrevs |= {
-    "egrep": "egrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
-    "fgrep": "fgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
     "g": "git",
     "ga": "git add",
     "gaa": "git add --all",
@@ -135,7 +133,6 @@ __xonsh__.abbrevs |= {
     "grbm": "git rebase $(git_main_branch)",
     "grbo": "git rebase --onto",
     "grbs": "git rebase --skip",
-    "grep": "grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
     "grev": "git revert",
     "grh": "git reset",
     "grhh": "git reset --hard",
@@ -184,5 +181,8 @@ __xonsh__.abbrevs |= {
     "gwip": 'git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"',
     "llm": "exa -lbGF --git --sort=modified",
     "lx": "exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale",
-    "todo": 'git grep --no-pager -EI "TODO|FIXME"',
+    "todo": 'git grep -EI "TODO|FIXME"',
+    "egrep": "egrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
+    "fgrep": "fgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
+    "grep": "grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
 }

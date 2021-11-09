@@ -3,7 +3,7 @@ import os as _os
 import shutil as _shutil
 
 from xonsh.built_ins import XSH as _XSH
-import xonsh.prompt.env
+import xonsh.prompt.env as _prompt_env
 from types import ModuleType as _ModuleType
 
 _conda_path = _shutil.which("conda")
@@ -27,4 +27,4 @@ def _find_env_name():
         env_name = _XSH.env.get("CONDA_DEFAULT_ENV", "")
     return env_name
 
-xonsh.prompt.env.find_env_name = _find_env_name
+_prompt_env.find_env_name = _find_env_name
