@@ -1,3 +1,37 @@
+import itertools as _itertools
+
+
+def _git_main_branch(cmd):
+    if not !(git rev-parse --git-dir):
+        return 
+
+    branch_names = "master", "main", "trunk"
+    inner_refs = "heads", "remotes/origin", "remotes/upstream"
+    
+    for inner_ref, branch in _itertools.product(inner_refs, branch_names):
+        if !(git show-ref -q --verify @(f"refs/{inner_ref}/{branch}")):
+            return branch
+            
+    return "master-fail"
+
+
+aliases['git_main_branch'] = _git_main_branch
+
+
+def _git_develop_branch(cmd):
+    if not !(git rev-parse --git-dir):
+        return
+
+    for branch in "dev", "devel", "development":
+        if !(git show-ref -q --verify @(f"refs/heads/{branch}")):
+            return branch
+            
+    return "develop"
+
+
+aliases['git_develop_branch'] = _git_develop_branch
+
+
 __xonsh__.abbrevs |= {
     "g": "git",
     "ga": "git add",
