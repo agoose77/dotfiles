@@ -32,6 +32,21 @@ def _git_develop_branch(cmd):
 aliases['git_develop_branch'] = _git_develop_branch
 
 
+def _git_current_branch(cmd):
+    result = !(git symbolic-ref --quiet HEAD)
+    if result.returncode != 0:
+        # No repo
+        if result.returncode == 128:
+            return
+        # Try git rev-parse
+        if not result := !(git rev-parse --short HEAD):
+            return
+    return result.out.removeprefix("refs/heads/")
+
+
+aliases['git_current_branch'] = _git_current_branch
+
+
 __xonsh__.abbrevs |= {
     "g": "git",
     "ga": "git add",
@@ -139,7 +154,6 @@ __xonsh__.abbrevs |= {
     "glol": "git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'",
     "glola": "git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all",
     "glols": "git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --stat",
-    "glp": "_git_log_prettily",
     "glum": "git pull upstream $(git_main_branch)",
     "gm": "git merge",
     "gma": "git merge --abort",
