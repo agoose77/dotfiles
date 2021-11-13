@@ -227,10 +227,10 @@ __xonsh__.abbrevs |= {
     "gupv": "git pull --rebase -v",
     "gwch": "git whatchanged -p --abbrev-commit --pretty=medium",
     "gwip": 'git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"',
-    "llm": "exa -lbGF --git --sort=modified",
-    "lx": "exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale",
     "todo": 'git grep -EI "TODO|FIXME"',
-    "egrep": "egrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
-    "fgrep": "fgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
-    "grep": "grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn,.idea,.tox}",
 }
+aliases.update({
+    "egrep": "egrep --color=auto --exclude-dir=.git --exclude-dir=.idea",
+    "fgrep": "fgrep --color=auto --exclude-dir=.git --exclude-dir=.idea",
+    "grep": "grep --color=auto --exclude-dir=.git --exclude-dir=.idea",
+})
