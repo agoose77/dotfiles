@@ -39,7 +39,8 @@ def _git_current_branch(cmd):
         if result.returncode == 128:
             return
         # Try git rev-parse
-        if not result := !(git rev-parse --short HEAD):
+        result = !(git rev-parse --short HEAD)
+        if not result:
             return
     return result.out.removeprefix("refs/heads/")
 
