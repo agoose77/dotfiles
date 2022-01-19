@@ -1,4 +1,4 @@
 use_venv = true
 
 [strategy]
-save = "wildcard"
+save = "minimum"
