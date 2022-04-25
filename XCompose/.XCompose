@@ -1,3 +1,5 @@
+include "%L"
+
 # Taken from https://askubuntu.com/questions/787113/compose-dead-greek-with-compose-key#:~:text=To%20type%20Greek%20letters%20on,or%20G%20for%20CAPITAL%20letters.
 # GREEK CAPITAL LETTERS
 <Multi_key> <G> <A> : "Α"    U0391    # GREEK CAPITAL LETTER ALPHA
