@@ -47,7 +47,6 @@ def _git_current_branch(cmd):
 
 aliases['git_current_branch'] = _git_current_branch
 
-
 abbrevs.update({
     "g": "git",
     "ga": "git add",
