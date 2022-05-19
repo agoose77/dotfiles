@@ -14,17 +14,3 @@ __xonsh__.execer.exec($(@(_conda_path) "shell.xonsh" "hook"),
                       filename="$(@(_conda_path) shell.xonsh hook)")
 _sys.modules["xontrib.conda"] = _mod
 del _sys, _mod, _ModuleType
-
-
-def _find_env_name():
-    """Finds the current environment name from $VIRTUAL_ENV or
-    $CONDA_DEFAULT_ENV if that is set.
-    """
-    env_path = _XSH.env.get("VIRTUAL_ENV", "")
-    if env_path:
-        env_name = _os.path.basename(env_path)
-    else:
-        env_name = _XSH.env.get("CONDA_DEFAULT_ENV", "")
-    return env_name
-
-_prompt_env.find_env_name = _find_env_name
