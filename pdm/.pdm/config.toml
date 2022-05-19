@@ -1,8 +1,8 @@
 [strategy]
 save = "minimum"
 
-[feature]
-install_cache = false
-
 [python]
 use_venv = true
+
+[install]
+cache = true
