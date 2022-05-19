@@ -47,7 +47,7 @@ def _git_current_branch(cmd):
 
 aliases['git_current_branch'] = _git_current_branch
 
-abbrevs.update({
+_git_abbrevs = ({
     "g": "git",
     "ga": "git add",
     "gaa": "git add --all",
@@ -229,7 +229,7 @@ abbrevs.update({
     "gwip": 'git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"',
     "todo": 'git grep -EI "TODO|FIXME"',
 })
-
+abbrevs.update(_git_abbrevs)
 aliases.update({
     "egrep": "egrep --color=auto --exclude-dir=.git --exclude-dir=.idea",
     "fgrep": "fgrep --color=auto --exclude-dir=.git --exclude-dir=.idea",
