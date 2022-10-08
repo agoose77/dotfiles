@@ -1,3 +1,9 @@
 [user]
 	email = goosey15@gmail.com
 	name = Angus Hollands
+
+[pull]
+    rebase = false
+
+[submodule]
+    recurse = true
