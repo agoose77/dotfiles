@@ -1,23 +1,26 @@
+[init]
+    defaultBranch = main
+    templatedir = ~/.git_template
 [user]
 	email = goosey15@gmail.com
 	name = Angus Hollands
-
-[pull]
-    rebase = false
-
-[submodule]
-    recurse = true
-
-[filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-
-[init]
-  defaultBranch = main
-	templatedir = ~/.git_template
-
+	signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM6KAmzdYW8JjiB5NXmq3NJAX/PP5DBOwhCWgu3ys0OP"
 [core]
 	autocrlf = input
 	excludesfile = ~/.config/git/gitignore_global
+[commit]
+	gpgsign = true
+[gpg]
+	format = ssh
+[gpg "ssh"]
+    program = "/opt/1Password/op-ssh-sign"
+	allowedSignersFile = ~/.ssh/allowed_signers
+[pull]
+    rebase = false
+[submodule]
+    recurse = true
+[filter "lfs"]
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
