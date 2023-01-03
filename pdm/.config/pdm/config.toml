@@ -5,4 +5,4 @@ save = "minimum"
 use_venv = true
 
 [install]
-cache = true
+cache = false
