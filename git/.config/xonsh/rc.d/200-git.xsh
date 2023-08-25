@@ -228,6 +228,7 @@ _git_abbrevs = ({
     "gwch": "git whatchanged -p --abbrev-commit --pretty=medium",
     "gwip": 'git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"',
     "todo": 'git grep -EI "TODO|FIXME"',
+    "gfi": "$EDITOR @$(git diff --name-only | uniq)"
 })
 abbrevs.update(_git_abbrevs)
 aliases.update({
