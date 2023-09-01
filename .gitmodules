@@ -1,3 +1,6 @@
 [submodule "wallpapers/.wallpapers"]
 	path = wallpapers/.wallpapers
 	url = git@github.com:agoose77/wallpapers.git
+[submodule "micromamba/.pycharm-micromamba/bin"]
+	path = micromamba/.pycharm-micromamba/bin
+	url = git@github.com:jonashaag/micromamba-pycharm.git
