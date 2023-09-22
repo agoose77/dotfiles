@@ -9,8 +9,8 @@ def _make_scratch(args):
     scratch_path.mkdir(exist_ok=True)
 
     paths = scratch_path.glob("scratch-*.md")
-    indices = (m[1] for m in (re.match(r"scratch-(\d+).*", p.name) for p in paths) if m)
-    index = max(indices, key=int, default=0)
+    indices = (int(m[1]) for m in (re.match(r"scratch-(\d+).*", p.name) for p in paths) if m)
+    index = max(indices, default=0)
 
     if suffix:
         name = f"scratch-{index+1}.{suffix}"
