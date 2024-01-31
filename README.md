@@ -1,5 +1,5 @@
 # dotfiles
-This repo contains my dotfiles (tada)! A new system installation is performed in four steps:
+This repo contains my dotfiles (tada)!
 
 ## Structure
 There are two `config.d`-like directories used, so that different configurations can be loaded without merging:
